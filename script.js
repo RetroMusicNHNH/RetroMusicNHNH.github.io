@@ -1,45 +1,25 @@
-// Efecto de scroll para la barra de navegación y agregar clase 'scrolled'
+// Estructura de datos para comentarios
+let comentarios = [];
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Cargar y mostrar comentarios
+    cargarComentarios();
+    mostrarComentarios();
+
+    const formularioComentarios = document.getElementById('formulario-comentarios');
+    formularioComentarios.addEventListener('submit', agregarComentario);
+
+    // Efecto de scroll para la barra de navegación
     const nav = document.querySelector('nav');
     window.addEventListener('scroll', function() {
         if (window.scrollY > 100) {
             nav.style.backgroundColor = 'rgba(44, 62, 80, 0.9)';
-            nav.classList.add('scrolled'); // Agregar clase 'scrolled'
+            nav.classList.add('scrolled');
         } else {
             nav.style.backgroundColor = 'var(--secondary-color)';
-            nav.classList.remove('scrolled'); // Remover clase 'scrolled'
+            nav.classList.remove('scrolled');
         }
     });
-
-    // Manejo de comentarios usando arreglo para almacenar los comentarios
-    const comentarios = [
-        'Me parece muy interesante cómo el neoliberalismo ha moldeado el mundo actual.',
-        'Considero que la globalización ha traído más beneficios que problemas, aunque hay retos a superar.'
-    ];
-
-    const comentariosExistentes = document.getElementById('comentarios-existentes');
-    const nuevoComentario = document.getElementById('nuevo-comentario');
-    const formularioComentarios = document.getElementById('formulario-comentarios');
-
-    function mostrarComentarios() {
-        comentariosExistentes.innerHTML = comentarios.map(comentario => `
-            <div class="comentario">
-                <p>${comentario}</p>
-                <small>Publicado el ${new Date().toLocaleString()}</small>
-            </div>`).join('');
-    }
-
-    formularioComentarios.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const comentario = nuevoComentario.value.trim();
-        if (comentario) {
-            comentarios.push(comentario);
-            nuevoComentario.value = '';
-            mostrarComentarios();
-        }
-    });
-
-    mostrarComentarios();
 
     // Animación suave al hacer scroll a las secciones
     document.querySelectorAll('nav a').forEach(anchor => {
@@ -95,3 +75,75 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(section);
     });
 });
+
+function cargarComentarios() {
+    const comentariosGuardados = localStorage.getItem('comentarios');
+    if (comentariosGuardados) {
+        comentarios = JSON.parse(comentariosGuardados);
+    }
+}
+
+function guardarComentarios() {
+    localStorage.setItem('comentarios', JSON.stringify(comentarios));
+}
+
+function agregarComentario(e) {
+    e.preventDefault();
+    const nuevoComentario = document.getElementById('nuevo-comentario');
+    const comentario = nuevoComentario.value.trim();
+    if (comentario) {
+        const nuevoComentarioObj = {
+            id: Date.now(),
+            texto: comentario,
+            fecha: new Date().toLocaleString(),
+            respuestas: []
+        };
+        comentarios.push(nuevoComentarioObj);
+        nuevoComentario.value = '';
+        guardarComentarios();
+        mostrarComentarios();
+    }
+}
+
+function mostrarComentarios() {
+    const comentariosExistentes = document.getElementById('comentarios-existentes');
+    comentariosExistentes.innerHTML = comentarios.map(comentario => `
+        <div class="comentario" id="comentario-${comentario.id}">
+            <p>${comentario.texto}</p>
+            <small>Publicado el ${comentario.fecha}</small>
+            <button onclick="mostrarFormularioRespuesta(${comentario.id})">Responder</button>
+            <div id="respuestas-${comentario.id}">
+                ${comentario.respuestas.map(respuesta => `
+                    <div class="respuesta">
+                        <p>${respuesta.texto}</p>
+                        <small>Respondido el ${respuesta.fecha}</small>
+                    </div>
+                `).join('')}
+            </div>
+            <div id="formulario-respuesta-${comentario.id}" style="display: none;">
+                <textarea id="respuesta-${comentario.id}"></textarea>
+                <button onclick="agregarRespuesta(${comentario.id})">Enviar Respuesta</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function mostrarFormularioRespuesta(comentarioId) {
+    const formularioRespuesta = document.getElementById(`formulario-respuesta-${comentarioId}`);
+    formularioRespuesta.style.display = 'block';
+}
+
+function agregarRespuesta(comentarioId) {
+    const respuestaTexto = document.getElementById(`respuesta-${comentarioId}`).value.trim();
+    if (respuestaTexto) {
+        const comentario = comentarios.find(c => c.id === comentarioId);
+        if (comentario) {
+            comentario.respuestas.push({
+                texto: respuestaTexto,
+                fecha: new Date().toLocaleString()
+            });
+            guardarComentarios();
+            mostrarComentarios();
+        }
+    }
+}
