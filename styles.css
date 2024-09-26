@@ -247,28 +247,6 @@ ul {
     height: 100%;
 }
 
-#nuevo-comentario {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    resize: vertical;
-}
-
-.comentario {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 15px;
-    margin-bottom: 15px;
-    transition: all 0.3s ease;
-}
-
-.comentario:hover {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
 footer {
     background-color: var(--secondary-color);
     color: white;
@@ -281,6 +259,62 @@ footer p {
     margin: 0;
 }
 
+/* Estilos para comentarios y respuestas */
+.comentario, .respuesta {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.comentario:hover, .respuesta:hover {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.respuestas-container {
+    margin-left: 20px;
+    margin-top: 10px;
+}
+
+.respuesta {
+    background-color: #f0f0f0;
+}
+
+.btn-responder, .btn-enviar-respuesta {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn-responder:hover, .btn-enviar-respuesta:hover {
+    background-color: #2980b9;
+}
+
+.formulario-respuesta textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+#nuevo-comentario {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+}
+
 @media screen and (max-width: 768px) {
     nav ul {
         flex-direction: column;
@@ -290,4 +324,45 @@ footer p {
     nav ul li {
         margin: 10px 0;
     }
+}
+@media screen and (max-width: 768px) {
+    .timeline::after {
+        left: 31px;
+    }
+    
+    .timeline-item {
+        width: 100%;
+        padding-left: 70px;
+        padding-right: 25px;
+    }
+    
+    .timeline-item::before {
+        left: 60px;
+        border: medium solid white;
+        border-width: 10px 10px 10px 0;
+        border-color: transparent white transparent transparent;
+    }
+
+    .timeline-item.left::after, .timeline-item.right::after {
+        left: 15px;
+    }
+
+    .timeline-item.right {
+        left: 0%;
+    }
+}
+
+.scrolled {
+    background-color: rgba(44, 62, 80, 0.9) !important;
+}
+
+.contenido-expandido {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.contenido-expandido.expanded {
+    max-height: 1000px; /* Ajusta este valor según sea necesario */
+    transition: max-height 0.5s ease-in;
 }

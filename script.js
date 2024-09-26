@@ -111,8 +111,8 @@ function mostrarComentarios() {
         <div class="comentario" id="comentario-${comentario.id}">
             <p>${comentario.texto}</p>
             <small>Publicado el ${comentario.fecha}</small>
-            <button onclick="mostrarFormularioRespuesta(${comentario.id})">Responder</button>
-            <div id="respuestas-${comentario.id}">
+            <button class="btn-responder" onclick="mostrarFormularioRespuesta(${comentario.id})">Responder</button>
+            <div id="respuestas-${comentario.id}" class="respuestas-container">
                 ${comentario.respuestas.map(respuesta => `
                     <div class="respuesta">
                         <p>${respuesta.texto}</p>
@@ -120,9 +120,9 @@ function mostrarComentarios() {
                     </div>
                 `).join('')}
             </div>
-            <div id="formulario-respuesta-${comentario.id}" style="display: none;">
-                <textarea id="respuesta-${comentario.id}"></textarea>
-                <button onclick="agregarRespuesta(${comentario.id})">Enviar Respuesta</button>
+            <div id="formulario-respuesta-${comentario.id}" class="formulario-respuesta" style="display: none;">
+                <textarea id="respuesta-${comentario.id}" placeholder="Escribe tu respuesta aquí..."></textarea>
+                <button class="btn-enviar-respuesta" onclick="agregarRespuesta(${comentario.id})">Enviar Respuesta</button>
             </div>
         </div>
     `).join('');
@@ -130,7 +130,7 @@ function mostrarComentarios() {
 
 function mostrarFormularioRespuesta(comentarioId) {
     const formularioRespuesta = document.getElementById(`formulario-respuesta-${comentarioId}`);
-    formularioRespuesta.style.display = 'block';
+    formularioRespuesta.style.display = formularioRespuesta.style.display === 'none' ? 'block' : 'none';
 }
 
 function agregarRespuesta(comentarioId) {
